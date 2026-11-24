@@ -1,0 +1,37 @@
+openapi: 3.0.3
+info:
+  title: Online Tech API
+  version: 1.0.0
+  description: E-commerce REST API for Online Tech
+paths:
+  /api/v1/health/:
+    get:
+      operationId: v1_health_retrieve
+      description: Checks whether the API service is running.
+      summary: Check API health
+      tags:
+      - core
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthCheck'
+          description: ''
+components:
+  schemas:
+    HealthCheck:
+      type: object
+      properties:
+        status:
+          type: string
+        service:
+          type: string
+        version:
+          type: string
+      required:
+      - service
+      - status
+      - version

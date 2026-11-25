@@ -161,3 +161,43 @@ CORS_ALLOWED_ORIGINS = []
 CORS_ALLOW_CREDENTIALS = False
 
 CORS_URLS_REGEX = r"^/api/v1/.*$"
+
+# logging
+LOGGING = {
+    "version": 1,
+
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "standard": {
+            "format": (
+                "{asctime} | "
+                "{levelname} | "
+                "{name} | "
+                "{message}"
+            ),
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
+    },
+
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+
+        "apps": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

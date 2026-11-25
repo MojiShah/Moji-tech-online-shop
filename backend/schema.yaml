@@ -20,8 +20,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthCheck'
           description: ''
+  /api/v1/health/db/:
+    get:
+      operationId: v1_health_db_retrieve
+      description: Checks connectivity to PostgreSQL.
+      summary: Check database Health
+      tags:
+      - Core
+      security:
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseHealth'
+          description: ''
+        '503':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseHealth'
+          description: ''
 components:
   schemas:
+    DatabaseHealth:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        service:
+          type: string
+      required:
+      - service
+      - status
     HealthCheck:
       type: object
       properties:
@@ -35,3 +67,11 @@ components:
       - service
       - status
       - version
+    StatusEnum:
+      enum:
+      - ok
+      - unavailable
+      type: string
+      description: |-
+        * `ok` - ok
+        * `unavailable` - unavailable

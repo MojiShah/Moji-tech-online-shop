@@ -4,6 +4,47 @@ info:
   version: 1.0.0
   description: E-commerce REST API for Online Tech
 paths:
+  /api/v1/auth/register/:
+    post:
+      operationId: v1_auth_register_create
+      description: Creates a new account without issuing JWT tokens. Email verification
+        is required before login.
+      summary: Register with email and password
+      tags:
+      - Authentication
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPublic'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: ''
+        '429':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+          description: ''
   /api/v1/health/:
     get:
       operationId: v1_health_retrieve
@@ -44,6 +85,13 @@ paths:
           description: ''
 components:
   schemas:
+    APIError:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
     DatabaseHealth:
       type: object
       properties:
@@ -54,6 +102,15 @@ components:
       required:
       - service
       - status
+    ErrorDetail:
+      type: object
+      properties:
+        status_code:
+          type: integer
+        details: {}
+      required:
+      - details
+      - status_code
     HealthCheck:
       type: object
       properties:
@@ -67,6 +124,31 @@ components:
       - service
       - status
       - version
+    Register:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        password_confirm:
+          type: string
+          writeOnly: true
+          maxLength: 128
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+      required:
+      - email
+      - password
+      - password_confirm
     StatusEnum:
       enum:
       - ok
@@ -75,3 +157,38 @@ components:
       description: |-
         * `ok` - ok
         * `unavailable` - unavailable
+    UserPublic:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        email:
+          type: string
+          format: email
+          readOnly: true
+          nullable: true
+        phone_number:
+          type: string
+          readOnly: true
+          nullable: true
+        first_name:
+          type: string
+          readOnly: true
+        last_name:
+          type: string
+          readOnly: true
+        is_email_verified:
+          type: boolean
+          readOnly: true
+        is_phone_verified:
+          type: boolean
+          readOnly: true
+      required:
+      - email
+      - first_name
+      - id
+      - is_email_verified
+      - is_phone_verified
+      - last_name
+      - phone_number

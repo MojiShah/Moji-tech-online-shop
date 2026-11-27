@@ -9,3 +9,10 @@ class HealthCheckSerializer(serializers.Serializer):
 class DatabaseHealthSerializer(serializers.Serializer):
     status = serializers.ChoiceField(choices=["ok","unavailable"])
     service = serializers.CharField()
+    
+class ErrorDetailSerializer(serializers.Serializer):
+    status_code = serializers.IntegerField()
+    details = serializers.JSONField()
+
+class APIErrorSerializer(serializers.Serializer):
+    error = ErrorDetailSerializer()

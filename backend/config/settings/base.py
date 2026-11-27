@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     # Local apps
     "apps.core.apps.CoreConfig",
+    "apps.accounts.apps.AccountsConfig",
 ]
 
 
@@ -132,6 +133,9 @@ REST_FRAMEWORK = {
         "apps.core.exceptions.custom_exception_handler"
     ),
 }
+
+# user model
+AUTH_USER_MODEL = "accounts.User"
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Online Tech API",

@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -124,19 +125,57 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": (
         "drf_spectacular.openapi.AutoSchema"
     ),
+    
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
 
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
+        "apps.accounts.permissions.HasVerifiedIdentity",
     ],
 
     "EXCEPTION_HANDLER": (
         "apps.core.exceptions.custom_exception_handler"
     ),
+    
+    "DEFAULT_THROTTLE_RATES": {
+        "register": "5/min",
+        "login": "5/min",
+        "token_refresh": "30/min",
+    },
 }
 
 # user model
 AUTH_USER_MODEL = "accounts.User"
 
+#JWT
+SIMPLE_JWT = {
+
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+
+    "ALGORITHM": "HS256",
+
+    "SIGNING_KEY": os.environ["JWT_SIGNING_KEY"],
+
+    "AUTH_HEADER_TYPES": ("Bearer",),
+
+    "USER_ID_FIELD": "id",
+
+    "USER_ID_CLAIM": "user_id",
+
+    "CHECK_USER_IS_ACTIVE": True,
+
+    "CHECK_REVOKE_TOKEN": True,
+
+    "ROTATE_REFRESH_TOKENS": False,
+
+    "BLACKLIST_AFTER_ROTATION": False,
+}
+
+# swagger
 SPECTACULAR_SETTINGS = {
     "TITLE": "Online Tech API",
     "DESCRIPTION": "E-commerce REST API for Online Tech",
